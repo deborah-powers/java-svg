@@ -13,10 +13,10 @@ public class Test{
 		double[] posTraitY ={1,40,70};
 		trait.setPoints (posTraitX, posTraitY);
 		dessin.addFigure (trait);
-		Polygone polygona = new Polygone();
+		Polygon polygona = new Polygon();
 		posTraitX[0] = 140;
 		polygona.setPoints (posTraitX, posTraitY);
 		dessin.addFigure (polygona);
-		dessin.draw ("dessin.svg");
+		dessin.toFile ("dessin.svg");
 	}
 }

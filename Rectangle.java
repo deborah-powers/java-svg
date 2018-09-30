@@ -12,11 +12,6 @@ public class Rectangle{
 	public void move (double pos){ this.move (pos, pos); }
 
 	protected String toStringData (String strRectangle){
-		/*
-		if (strokeWidth !=2) strRectangle = strRectangle +" stroke-width=\""+ strokeWidth +"\"";
-		if (colStroke != "maroon") strRectangle = strRectangle +" stroke=\"" + colStroke +"\"";
-		if (colFill != "pink") strRectangle = strRectangle +" fill=\"" + colFill +"\"";
-		*/
 		if (strokeWidth !=2 || colStroke != "maroon" || colFill != "pink"){
 			strRectangle = strRectangle +" style=\"";
 			if (strokeWidth !=2) strRectangle = strRectangle + "stroke-width:" + strokeWidth +';';
