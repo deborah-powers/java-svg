@@ -5,13 +5,21 @@ import java.util.ArrayList;
 public class Polygon extends Rectangle{
 	ArrayList<Double> listPointX = new ArrayList<Double>();
 	ArrayList<Double> listPointY = new ArrayList<Double>();
+
 	public String toString(){
 		// modifier les coordonnees pour les adapter a l'ecriture de la forme
 		int lenListPoint = listPointX.size();
-		String strListPoint ="";
-		for (int p=0; p< lenListPoint; p++){
-			double tmpPointX = listPointX.get (p);
-			double tmpPointY = listPointY.get (p);
+		// recuperer le premier point, à part afin d'avoir un bel affichage
+		double tmpPointX = listPointX.get (0);
+		double tmpPointY = listPointY.get (0);
+		tmpPointX *= width;
+		tmpPointX += posX;
+		tmpPointY *= height;
+		tmpPointY += posY;
+		String strListPoint = tmpPointX +","+ tmpPointY;
+		for (int p=1; p< lenListPoint; p++){
+			tmpPointX = listPointX.get (p);
+			tmpPointY = listPointY.get (p);
 			tmpPointX *= width;
 			tmpPointX += posX;
 			tmpPointY *= height;
@@ -22,6 +30,7 @@ public class Polygon extends Rectangle{
 		strFigure = toStringData (strFigure);
 		return strFigure;
 	}
+
 	public void setPoints (double[] listPointX, double[] listPointY){
 		int lenListPoint = listPointX.length;
 		double[] minmaxX = minmax (listPointX);
@@ -41,6 +50,7 @@ public class Polygon extends Rectangle{
 			this.listPointY.add (tmpPointY);
 		}
 	}
+
 	public Polygon (double[] listPointX, double[] listPointY, String colFill, String colStroke, int strokeWidth){
 		super (0,0,1,1, colFill, colStroke, strokeWidth);
 		setPoints (listPointX, listPointY);
@@ -54,6 +64,7 @@ public class Polygon extends Rectangle{
 		setPoints (listPointX, listPointY);
 	}
 	public Polygon(){ super (0,0,1,1); }
+
 	// comprendre les points d'une liste
 	private double[] minmax (double[] tabPoints){
 		double min = tabPoints[0];

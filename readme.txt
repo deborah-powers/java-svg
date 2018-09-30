@@ -1,6 +1,8 @@
 Réaliser des dessins svg simples.
 
-J'utilise une classe myUtils.File afin d'écrire facilement les données dans un .svg.
+J'utilise des classes personnelles facilitant certaines actions
+	myUtils.File afin d'écrire facilement les données dans un .svg.
+	myUtils.Text pour traiter les chaines de caractères.
 
 Les formes dessinables:
 	Rectangle (double posX, double posY, double largeur, double hauteur, [String couleur, String couleurBordure], [int épaisseurBordure])
