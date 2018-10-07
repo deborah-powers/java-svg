@@ -3,7 +3,6 @@ Réaliser des dessins svg simples.
 Les formes dessinables:
 	Rectangle (double posX, double posY, double largeur, double hauteur, [String couleur, String couleurBordure], [int épaisseurBordure])
 	Ellipse (idem)
-		si largeur et hauteur sont identiques, l'ellipse est transformée en cercle.
 	Line (double posX, double posY, double largeur, double hauteur, [String couleurBordure], [int épaisseurBordure])
 	Polygon (double[] listPosX, double[] listPosY, [String couleur, String couleurBordure], [int épaisseurBordure])
 	Polyline (idem)
