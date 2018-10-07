@@ -3,87 +3,75 @@ package svg;
 import myUtils.File;
 import myUtils.Text;
 import java.text.MessageFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Drawing extends Rectangle{
 	ArrayList<Rectangle> listRectangle = new ArrayList<Rectangle>();
-
+	MessageFormat template = new MessageFormat ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"{0}\" height=\"{1}\">\n<style type=\"text/css\"><![CDATA[\n* '{'\n\tfill: {2};\n\tstroke: {3};\n\tstroke-width: {4};\n'}'\n]]></style>\n{5}\n</svg>");
 
 	public void toFile (String svgFile){
 		String strDrawing = toString();
 		File file = new File (svgFile, strDrawing);
 		file.toFile();
 	}
-	public String subString (String text, String wordStart, String wordEnd){
-		int d= text.indexOf (wordStart);
-		int f= text.indexOf (wordEnd, d);
-		String subStr = text.substring (d,f);
-		return subStr;
-	}
-
-	public String fromFile (String svgFile){
-		// récupérer le texte
+	public void fromFile (String svgFile){
 		File file = new File (svgFile);
 		String strDrawing = file.fromFile();
-		// découper le texte pour extraire les lignes
-		Scanner scnDrawing = new Scanner (strDrawing).useDelimiter ("<");
-		String strTmp = scnDrawing.next();	// en-tête xml
-		// les dimension de l'image
-		strTmp = scnDrawing.next();			// en-tête svg avec les dimension de l'image
-		Text textTmp = new Text (strTmp);
-		strTmp = textTmp.subString ("width", ">");
-		Scanner reader = new Scanner (strTmp).useDelimiter ("\"");
-		strTmp = reader.next();
-		width = reader.nextInt();
-		strTmp = reader.next();
-		height = reader.nextInt();
-		reader.close();
-		// le css
-		// 1) éliminer les marqueurs inutiles
-		strTmp = scnDrawing.next();			// en-tête style
-		strTmp = scnDrawing.next();
-		textTmp = new Text (strTmp);
-		strTmp = textTmp.subString ("{", "}");
-		// 2) récupérer les valeurs
-		reader = new Scanner (strTmp).useDelimiter (": ");
-		strTmp = reader.next();
-		strTmp = reader.next();
-		int f= strTmp.indexOf (";");
-		colFill = strTmp.substring (0,f);
-		strTmp = reader.next();
-		f= strTmp.indexOf (";");
-		colStroke = strTmp.substring (0,f);
-		strTmp = reader.next();
-		f= strTmp.indexOf (";");
-		strTmp = strTmp.substring (0,f);
-		strokeWidth = Integer.parseInt (strTmp);
-		reader.close();
-		// les formes
-
-
-
-
-	//	System.out.println (strDrawing);
-		scnDrawing.close();
-		return strDrawing;
+		fromString (strDrawing);
 	}
-
-	public void fromString(){}
 	public String toString(){
 		String strListRectangle ="";
 		for (Rectangle fig: listRectangle) strListRectangle = strListRectangle + fig.toString();
-		String strStyle = MessageFormat.format ("\n\tfill: {0};\n\tstroke: {1};\n\tstroke-width: {2};\n\t", colFill, colStroke, strokeWidth);
-		strStyle = "{"+ strStyle +"}";
-		String strDrawing = MessageFormat.format ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"{0}\" height=\"{1}\">\n<style type=\"text/css\"><![CDATA[\n* {2}\n]]></style>\n{3}\n</svg>", width, height, strStyle, strListRectangle);
+		Object[] data ={ width, height, colFill, colStroke, strokeWidth, strListRectangle };
+		String strDrawing = template.format (data);
 		return strDrawing;
 	}
-
+	public void fromString (String strDrawing){
+		// récupérer les données de l'image
+		Object[] data = template.parse (strDrawing, new ParsePosition(0));
+		width = Double.parseDouble ((String) data[0]);
+		height = Double.parseDouble ((String) data[1]);
+		colFill = (String) data[2];
+		colStroke = (String) data[3];
+		strokeWidth = Integer.parseInt ((String) data[4]);
+		String strListRectangle = (String) data[5];
+		// récupérer les formes
+		Scanner listRectangle = new Scanner (strListRectangle).useDelimiter ("<");
+		String[] tmpList =null;
+		String tmpStr =null;
+		String tmpFig =null;
+		while (listRectangle.hasNext()){
+			Rectangle shape = null;
+			tmpStr = listRectangle.next();
+			tmpList = tmpStr.split (" ");
+			tmpFig = tmpList[0];
+			switch (tmpFig){
+				case "line":
+					shape = new Line();
+					break;
+				case "ellipse":
+					shape = new Ellipse();
+					break;
+				case "polygon":
+					shape = new Polygon();
+					break;
+				case "polyline":
+					shape = new Polyline();
+					break;
+				default:
+					shape = new Rectangle();
+			}
+			shape.fromString ("<"+ tmpStr);
+			addFigure (shape);
+		}
+		listRectangle.close();
+	}
 	public void addFigure (Rectangle fig){ listRectangle.add (fig); }
 	public void addFigure(){
 		Rectangle fig = new Rectangle();
 		addFigure (fig);
 	}
-
 	public Drawing(){ super (0,0,800,500); }
 }

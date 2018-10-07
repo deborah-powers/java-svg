@@ -1,15 +1,23 @@
 package svg;
 import java.text.MessageFormat;
+import java.text.ParsePosition;
 
 public class Ellipse extends Rectangle{
+	MessageFormat template = new MessageFormat ("<ellipse cx=\"{0}\" cy=\"{1}\" rx=\"{2}\" ry=\"{3}\" {4}/>");
+
 	public String toString(){
 		// modifier les coordonnees pour les adapter a l'ecriture du cercle
 		width /=2; height /=2;
 		posX += width; posY += height;
-		String strFigure = MessageFormat.format ("<ellipse cx=\"{0}\" cy=\"{1}\" rx=\"{2}\" ry=\"{3}\"", posX, posY, width, height);
-		if (width == height) strFigure = MessageFormat.format ("<circle cx=\"{0}\" cy=\"{1}\" r=\"{2}\"", posX, posY, width);
-		strFigure = toStringData (strFigure);
+		Object[] listFields = setFields();
+		String strFigure = template.format (listFields);
 		return strFigure;
+	}
+	public void fromString (String strRectangle){
+		Object[] listFields = template.parse (strRectangle, new ParsePosition(0));
+		getFields (listFields);
+		posX -= width; posY -= height;
+		width *=2; height *=2;
 	}
 	public Ellipse  (double posX, double posY, double width, double height, String colFill, String colStroke, int strokeWidth){
 		super (posX, posY, width, height, colFill, colStroke, strokeWidth); }

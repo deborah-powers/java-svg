@@ -1,9 +1,5 @@
 Réaliser des dessins svg simples.
 
-J'utilise des classes personnelles facilitant certaines actions
-	myUtils.File afin d'écrire facilement les données dans un .svg.
-	myUtils.Text pour traiter les chaines de caractères.
-
 Les formes dessinables:
 	Rectangle (double posX, double posY, double largeur, double hauteur, [String couleur, String couleurBordure], [int épaisseurBordure])
 	Ellipse (idem)
@@ -22,4 +18,5 @@ Dessiner:
 	dessin.toFile ("fileName.svg");
 
 Récupérer un dessin:
-	En cours d'écriture
+	Drawing dessin = new Drawing();
+	dessin.fromFile ("fileName.svg");
